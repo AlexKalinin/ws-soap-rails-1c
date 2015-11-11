@@ -1,1 +1,4 @@
 .idea/
+rails/tmp/
+rails/db/*.sqlite3
+rails/log/*
