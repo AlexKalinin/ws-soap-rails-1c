@@ -2,6 +2,18 @@
 
 Language / язык: **EN** | [RU](README.RUS.md)
 
+## Contents
+
+* [Project structure](#structure)
+* [Project tasks](#tasks)
+
+## Structure
+
+* `1c8/` - folder with 1C:Enterprise 8.2 sources
+* `rails/` - Ruby on Rails project sources
+* `docs/` - project documentation
+
+
 ## Tasks
 
 * Implement webservice server on ROR
