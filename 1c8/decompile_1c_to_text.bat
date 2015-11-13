@@ -6,5 +6,6 @@ REM Kyrgyzstan, Bishkek, March 2014.
 echo on
 cd C:\prj\ws-soap-rails-1c\1c8\
 REM libs\V8Unpack.exe -PARSE ones_import_from_excel.epf  src/
-libs\V8Unpack.exe -PARSE src.cf  src_cf/
+rmdir /S /Q src_cf
+libs\V8Unpack.exe -P src.cf  src_cf/
 pause

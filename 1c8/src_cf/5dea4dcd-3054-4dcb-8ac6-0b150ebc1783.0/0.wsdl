@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+		xmlns:soap12bind="http://schemas.xmlsoap.org/wsdl/soap12/"
+		xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/"
+		xmlns:tns="urn:WashOut"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsd1="urn:WashOut"
+		name="ones_soap"
+		targetNamespace="urn:WashOut">
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+				xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/"
+				xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				targetNamespace="urn:WashOut"/>
+	</types>
+	<message name="testNumbers">
+		<part name="value"
+				type="xsd:int"/>
+	</message>
+	<message name="testNumbers_response">
+		<part name="value"
+				type="xsd:string"/>
+	</message>
+	<message name="testText">
+		<part name="value"
+				type="xsd:string"/>
+	</message>
+	<message name="testText_response">
+		<part name="value"
+				type="xsd:string"/>
+	</message>
+	<portType name="ones_soap_port">
+		<operation name="testNumbers">
+			<input name="testNumbersRequest"
+					message="tns:testNumbers"/>
+			<output name="testNumbersResponse"
+					message="tns:testNumbers_response"/>
+		</operation>
+		<operation name="testText">
+			<input name="testTextRequest"
+					message="tns:testText"/>
+			<output name="testTextResponse"
+					message="tns:testText_response"/>
+		</operation>
+	</portType>
+	<binding name="ones_soap_binding"
+			type="tns:ones_soap_port">
+		<soapbind:binding style="rpc"
+				transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="testNumbers">
+			<soapbind:operation style="rpc"
+					soapAction="testNumbers"/>
+			<input>
+				<soapbind:body use="encoded"
+						encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+						namespace="urn:WashOut"/>
+			</input>
+			<output>
+				<soapbind:body use="encoded"
+						encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+						namespace="urn:WashOut"/>
+			</output>
+		</operation>
+		<operation name="testText">
+			<soapbind:operation style="rpc"
+					soapAction="testText"/>
+			<input>
+				<soapbind:body use="encoded"
+						encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+						namespace="urn:WashOut"/>
+			</input>
+			<output>
+				<soapbind:body use="encoded"
+						encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+						namespace="urn:WashOut"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="service">
+		<port name="ones_soap_port"
+				binding="tns:ones_soap_binding">
+			<soapbind:address location="http://192.168.15.103:3000/ones_soap/action"/>
+		</port>
+	</service>
+</definitions>

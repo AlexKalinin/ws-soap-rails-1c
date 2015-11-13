@@ -1,0 +1,48 @@
+﻿
+Процедура ПриНачалеРаботыСистемы()
+	// Значение берется из страницы 
+	//   http://.../ones_soap/wsdl
+	//   Параметр:
+	//      targetNamespace="urn:WashOut" 
+	// Либо можно посмотреть через объект WS-ссылки 
+	//   WS-ссылка/Модель данных/Пакет
+	URIПространстваИменСервиса = "urn:WashOut"; 
+	
+	// Значение берется из страницы 
+	//   http://.../ones_soap/wsdl
+	//   Параметр: service:
+	//      <service name="service">
+    //        <port name="ones_soap_port" binding="tns:ones_soap_binding">
+    //           <soap:address location="http://192.168.15.103:3000/ones_soap/action"/>
+    //        </port>
+    //      </service>
+	// 
+	// Либо можно посмотреть через объект WS-ссылки 
+	//   WS-ссылка/Web-сервисы/СобственноИмя
+	ИмяСервиса = "service";
+	
+    // Значение берется из страницы 
+	//   http://.../ones_soap/wsdl
+	//   Параметр: port:
+	//      <service name="service">
+    //        <port name="ones_soap_port" binding="tns:ones_soap_binding">
+    //           <soap:address location="http://192.168.15.103:3000/ones_soap/action"/>
+    //        </port>
+    //      </service>
+	// 
+	// Либо можно посмотреть через объект WS-ссылки 
+	//   WS-ссылка/Web-сервисы/СобственноИмя/ИмяПротоколаSoap
+	ИмяПорта = "ones_soap_port";
+	Прокси = WSСсылки.TestSoap.СоздатьWSПрокси(URIПространстваИменСервиса, ИмяСервиса, ИмяПорта);
+    
+    //Получаем тип параметра, который передается в метод testNumbers.
+    // ТипWSПараметра = Прокси.ФабрикаXDTO.Пакеты.Получить("http://www.w3.org/2001/XMLSchema").Получить("testNumbers");
+    
+    //Создаем параметр на основе типа и заполняем значение параметра testNumbers.
+    //WSПараметр	   = Прокси.ФабрикаXDTO.Создать(ТипWSПараметра);
+    //WSПараметр.testNumbers	= 10;
+    
+    ////Вызываем метод веб-сервиса, записываем результат в переменную КурсыВалют.
+    Значение = Прокси.testNumbers(1);
+	
+КонецПроцедуры
