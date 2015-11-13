@@ -1,4 +1,6 @@
 .idea/
+!1c8/db/.keep
+1c8/db/*
 rails/tmp/
 rails/db/*.sqlite3
 rails/log/*
