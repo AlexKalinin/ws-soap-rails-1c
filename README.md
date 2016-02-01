@@ -33,7 +33,7 @@ Another my contacts and info about me, you can find out at [alexkalinin.pro](htt
 
 ## Как развернуть локально
 
-RoR часть запускается стандартно, командами:
+RoR-часть запускается стандартно, командами:
 
 ```
 cd rails/
@@ -43,7 +43,7 @@ rails s -b 0.0.0.0 -p 3000
 
 После сообщений:
 
-![rails_server.png](_screenshots/rails_server.png)
+![rails_server.png](_screenshots/rais_server.png)
 
 можно запустить браузер и проверить, доступен ли WSDL SOAP-сервиса:
 
