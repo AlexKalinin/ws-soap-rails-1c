@@ -1,0 +1,2226 @@
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta content='width=1024' name='viewport'>
+
+    
+
+    <title>Использование внешних веб-сервисов в 1С на примере загрузки курсов валют / Хабрахабр</title>
+
+      <meta name="description" content="Знаю, что на хабре не очень-то жалуют многострадальную 1С. Хотя, с выходом платформы 8.3 (с клиентами под Linux), ее стали любить несколько больше. Кстати, так же, совсем недавно интерфейс одной из..." />
+
+      <meta name="keywords" content="1с предприятие 8, web-services, разработка, конфигурирование, 1с must die" />
+
+      <meta property="fb:app_id"      content="444736788986613" /> 
+<meta property="og:type"        content="article" /> 
+<meta property="og:url"         content="https://habrahabr.ru/post/148658/" /> 
+<meta property="og:title"       content="Использование внешних веб-сервисов в 1С на примере загрузки курсов валют" />
+	<meta property="og:image"       content="https://habrastorage.org/getpro/habr/post_images/8d7/420/668/8d7420668a65b4217f7d41467dcf6c7c.png" />
+	<link rel="image_src" href="https://habrastorage.org/getpro/habr/post_images/8d7/420/668/8d7420668a65b4217f7d41467dcf6c7c.png" /><meta property="og:image"       content="https://habrastorage.org/getpro/habr/post_images/cbf/e75/a06/cbfe75a06fdc7de9ffe9ca9f9f569628.png" />
+	<link rel="image_src" href="https://habrastorage.org/getpro/habr/post_images/cbf/e75/a06/cbfe75a06fdc7de9ffe9ca9f9f569628.png" /><meta property="og:image"       content="https://habrastorage.org/getpro/habr/post_images/d65/8b4/7f7/d658b47f75e9630b4fe8a63c22d3bb37.png" />
+	<link rel="image_src" href="https://habrastorage.org/getpro/habr/post_images/d65/8b4/7f7/d658b47f75e9630b4fe8a63c22d3bb37.png" /><meta property="og:image"       content="https://habrastorage.org/getpro/habr/post_images/15a/bc0/19e/15abc019eb5acff8836e92381c8ad908.png" />
+	<link rel="image_src" href="https://habrastorage.org/getpro/habr/post_images/15a/bc0/19e/15abc019eb5acff8836e92381c8ad908.png" /><meta property="og:image"       content="https://habrastorage.org/getpro/habr/post_images/1bf/8a9/cea/1bf8a9ceab7fd044379accc9b462d3a9.png" />
+	<link rel="image_src" href="https://habrastorage.org/getpro/habr/post_images/1bf/8a9/cea/1bf8a9ceab7fd044379accc9b462d3a9.png" /><meta property="og:image"       content="https://habrastorage.org/getpro/habr/post_images/1fb/696/d91/1fb696d9163fff16c8511892873545f3.png" />
+	<link rel="image_src" href="https://habrastorage.org/getpro/habr/post_images/1fb/696/d91/1fb696d9163fff16c8511892873545f3.png" />
+	
+<meta property="og:description" content="Знаю, что на хабре не очень-то жалуют многострадальную 1С. Хотя, с выходом платформы 8.3 (с клиентами под Linux), ее стали любить несколько больше. Кстати, так..." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@habrahabr" />
+  <meta property="al:android:url" content="habrahabr://post/148658" />
+<meta property="al:android:app_name" content="Habrahabr" />
+<meta property="al:android:package" content="ru.habrahabr" />
+<meta property="al:windows_phone:url" content="habrahabr://post/148658" />
+<meta property="al:windows_phone:app_name" content="Habrahabr" />
+<meta property="al:windows_phone:app_id" content="460a6bd6-8955-470f-935e-9ea1726a6060" />
+  <link rel="canonical" href="https://habrahabr.ru/post/148658/"/>
+  <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.habrahabr.ru/post/148658/" >
+
+
+
+      <link href="//habracdn.net/habr/styles/1453985325/_build/post_common_css.css" rel="stylesheet" media="all" />
+  <link href="//habracdn.net/habr/styles/1453985325/users/all.css" rel="stylesheet" media="all" />
+
+    <link href="//habracdn.net/habr/styles/1453985325/_build/global_main.css" rel="stylesheet" media="all" />
+
+    <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/assets/global_main.js"></script>
+      <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/assets/post_common_js.js"></script>
+  <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/users/all.js"></script>
+
+
+    
+    
+
+    <meta name='yandex-verification' content='67d46b975fa41645' />
+    
+    <meta content='Хабрахабр' name='apple-mobile-web-app-title'>
+
+<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png" />
+<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16" />
+<meta name="application-name" content="Хабрахабр"/>
+<meta name="msapplication-TileColor" content="#FFFFFF" />
+<meta name="msapplication-TileImage" content="mstile-144x144.png" />
+
+      
+      <script >
+        var N = 5;
+        var ar_duo1 = Math.floor(Math.random()*N+1);
+      </script>
+      <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/adriver.js"></script>
+
+    <link title="Хабрахабр / Комментарии к публикации «Использование внешних веб-сервисов в 1С на примере загрузки курсов валют»" type="application/rss+xml" rel="alternate" href="https://habrahabr.ru/rss/post/148658/"/>
+
+    <script src="//habracdn.net/habr/javascripts/1453985325/_parts/advertising.js"></script>
+
+<script type="text/javascript">
+
+  if (typeof adriver == 'undefined')
+  {
+    var adb1 = 'yes';
+  }
+
+  var user_type = "guest";
+
+  var page_type = "publish_ugc";
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-726094-1',  'auto');
+  ga('create', 'UA-726094-24', 'auto', {'name': 'HGM'});
+
+  ga('require', 'displayfeatures');
+  ga('set', 'dimension1', user_type); // user type - guest/readonly/habrauser
+
+
+  ga('set', 'dimension4', adb1);
+
+  ga('set', 'dimension5', page_type);
+
+
+  if(typeof removeUtms === 'undefined') {
+    removeUtms = function(){};
+  }
+
+  ga('HGM.set', 'dimension1', user_type);
+  ga('HGM.set', 'dimension2', "habrahabr");
+  ga('HGM.send', 'pageview');
+
+  ga('send', 'pageview', { 'hitCallback': removeUtms });
+
+
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="layout_inner">
+      <div id="TMpanel">
+  <div class="container">
+    <div class="bmenu">
+      <a href="https://tmfeed.ru?utm_source=tm_habrahabr&utm_medium=tm_top_panel&utm_campaign=tm_promo">TM Feed</a>
+      <a href="https://habrahabr.ru?utm_source=tm_habrahabr&utm_medium=tm_top_panel&utm_campaign=tm_promo" class="current">Хабрахабр</a>
+      <a href="https://megamozg.ru?utm_source=tm_habrahabr&utm_medium=tm_top_panel&utm_campaign=tm_promo">Мегамозг</a>
+      <a href="https://geektimes.ru?utm_source=tm_habrahabr&utm_medium=tm_top_panel&utm_campaign=tm_promo">Geektimes</a>
+      <a href="https://toster.ru?utm_source=tm_habrahabr&utm_medium=tm_top_panel&utm_campaign=tm_promo">Тостер</a>
+      <a href="https://moikrug.ru?utm_source=tm_habrahabr&utm_medium=tm_top_panel&utm_campaign=tm_promo">Мой круг</a>
+      <a href="https://freelansim.ru?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=head_link">Фрилансим</a>
+    </div>
+      <div class="bmenu_inner" style="display:inline-block!important;visibility:visible!important;">
+        <span class="bmenu__label">Спецпроекты:</span>
+        <span class="bmenu slink"></span>
+        <span id="adriver_banner_465568687"></span>
+      </div>
+  </div>
+</div>
+
+      <div id="layout">
+        <div id="navbar_overlay" class="hidden"></div>
+<div id="navbar">
+    <div class="nav_panel">
+        <a href="/" class="logo"></a>
+
+            <a href="/posts/" class="tab tab_menu" data-tab="menu_tab" title="Меню"><span class="g-icon g-icon-burger"></span></a>
+            <a href="https://habrahabr.ru/auth/login/" class="tab tab_login" id="login" title="Войти"><span class="g-icon g-icon-lock"></span></a>
+
+        <a href="#" class="scroll_to_up hidden scroll_to_up_for_guest" id="scroll_to_top" title="Наверх"></a>
+    </div>
+
+    <div class="nav_tabs_content ">
+        <div class="nav_tab hidden" id="menu_tab">
+            <div class="title">Разделы</div>
+            <form action="/search/" method="get" class="global_search_form">
+                <div>
+                    <input type="text" name="q" placeholder="Поиск" />
+                </div>
+            </form>
+            <div class="menu">
+                <a href="/posts/top/">Публикации</a>
+                <a href="/hubs/">Хабы</a>
+                <a href="/companies/">Компании</a>
+                <a href="/users/">Пользователи</a>
+                <a href="/sandbox/">Песочница</a>
+                <div class="line"></div>
+                <a href="https://toster.ru/" class="new_window">Q&A</a>
+                <a href="https://moikrug.ru?utm_source=tm_habrahabr&utm_medium=tm_left_menu&utm_campaign=tm_promo" class="new_window">Вакансии</a>
+            </div>
+
+              
+                  <div class="line"></div>
+                  <div class="title">Спецпроекты</div>
+                  <div class="menu">
+                <a href="http://bit.ly/1KGwmEH" target="_blank">$27000 на хостинг</a>
+                
+                <a href="http://bit.ly/1QKAScp" target="_blank">Соберите свой стартап</a>
+                
+                <a href="http://bit.ly/1ZWuLUH" target="_blank">Обзор колонок Marshall</a>
+                </div>
+        </div>
+
+
+    </div>
+</div>
+
+        <div class="inner">
+
+          <script type="text/javascript">
+
+    $(document).on('click', '.adb-close', function(){
+        $('.lain_13_what_are_you_doing').animate({ 'height': 0 });
+
+        createCookie('adb-p', '1', 1);
+    });
+
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    $(document).ready(function(){
+        if (adb1 == 'yes' && !readCookie('adb-p'))
+        {
+            $('.lain_13_what_are_you_doing').show();
+        }
+    });
+</script>
+<div class="lain_13_what_are_you_doing" style="display: none;">
+    <div class="adb-text">
+        Привет, Хабрапользователь. Кажется, ты используешь AdBlock. Хабрахабр <br>
+        развивается и существует за счет доходов от рекламы. Добавь нас в исключения.
+    </div>
+    <a class="adb-btn" href="/adblock/">открытое письмо</a>
+    <a class="adb-btn" href="/adblock/?how=1">как отключить</a>
+    <div class="adb-close"></div>
+</div>
+
+
+
+          
+
+            <div class="profile-header">
+
+  <div class="profile-header__summary author-info author-info_profile ">
+    <a href="/users/mix2000/" class="author-info__image">
+        <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9.jpg" class="author-info__image-pic"/>
+
+    </a>
+
+    <div class="author-info__desc">
+      <div class="author-info__username">
+         <a href="/users/mix2000/" class="author-info__name">Michael</a> 
+        <a href="/users/mix2000/" class="author-info__nickname">@mix2000</a>
+        
+      </div>
+        <div class="author-info__specialization">
+          Пользователь
+        </div>
+    </div>
+  </div>
+
+    <div class="profile-header__stats">
+
+      <div class="karma__widjet voting-wjt js-karma  ">
+
+        <div class="voting-wjt__counter js-karma-mark voting-wjt__counter_positive " title="262 голоса">
+          <div class="voting-wjt__counter-score js-karma_num">117,5</div>
+          <div class="voting-wjt__label">карма</div>
+        </div>
+
+      </div>
+
+      <div class="user-rating" title="Рейтинг пользователя">
+        <div class="user-rating__value">0,0</div>
+        <div class="user-rating__label">рейтинг</div>
+      </div>
+
+    </div>
+
+
+</div>
+
+  <div class="column-wrapper">
+    <div class="content_left js-content_left">
+        <div class="tabs">
+    <ul class="tabs-menu tabs-menu_habrahabr">
+          <li class="tabs-menu__item tabs-menu__item_user-profile tabs-menu__item_inline">
+            <a href="https://habrahabr.ru/users/mix2000/" class="tab-item tab-item_stacked "  >
+              <span class="tab-item__value stats">
+                <span class="stats__counters stats__counters_big">
+                  <strong class="counter"></strong>
+                </span>
+                <span class="stats__value">Профиль</span>
+            </a>
+          </li>
+          <li class="tabs-menu__item tabs-menu__item_user-profile tabs-menu__item_inline">
+            <a href="https://habrahabr.ru/users/mix2000/topics/" class="tab-item tab-item_stacked tab-item_current"  >
+              <span class="tab-item__value stats">
+                <span class="stats__counters stats__counters_big">
+                  <strong class="counter">20</strong>
+                </span>
+                <span class="stats__value">Публикации</span>
+            </a>
+          </li>
+          <li class="tabs-menu__item tabs-menu__item_user-profile tabs-menu__item_inline">
+            <a href="https://habrahabr.ru/users/mix2000/comments/" class="tab-item tab-item_stacked "  >
+              <span class="tab-item__value stats">
+                <span class="stats__counters stats__counters_big">
+                  <strong class="counter">317</strong>
+                </span>
+                <span class="stats__value">Комментарии</span>
+            </a>
+          </li>
+          <li class="tabs-menu__item tabs-menu__item_user-profile tabs-menu__item_inline">
+            <a href="https://habrahabr.ru/users/mix2000/favorites/" class="tab-item tab-item_stacked "  >
+              <span class="tab-item__value stats">
+                <span class="stats__counters stats__counters_big">
+                  <strong class="counter">412</strong>
+                </span>
+                <span class="stats__value">Избранное</span>
+            </a>
+          </li>
+          <li class="tabs-menu__item tabs-menu__item_user-profile tabs-menu__item_inline">
+            <a href="https://habrahabr.ru/users/mix2000/subscription/followers/" class="tab-item tab-item_stacked "  >
+              <span class="tab-item__value stats">
+                <span class="stats__counters stats__counters_big">
+                  <strong class="counter">34</strong>
+                </span>
+                <span class="stats__value">Подписчики</span>
+            </a>
+          </li>
+    </ul>
+
+  </div>
+
+
+      <div class="post_show">
+        
+
+  <div class="post shortcuts_item" id="post_148658">
+    <div class="published">30 июля 2012 в 13:19</div>
+    <h1 class="title">
+      
+
+        <span class="post_title">Использование внешних веб-сервисов в 1С на примере загрузки курсов валют</span>
+
+      
+
+      
+
+    </h1>
+
+      <div class="hubs">
+      <a href="https://habrahabr.ru/hub/programming/" class="hub " title="Вы не подписаны на этот хаб" >Программирование</a><span class="profiled_hub" title="Профильный хаб">*</span>
+  </div>
+
+
+    <div class="content html_format">
+      Знаю, что на хабре не очень-то жалуют многострадальную 1С. Хотя, <a href="http://habrahabr.ru/post/147077/">с выходом платформы 8.3</a> (с клиентами под Linux), ее стали любить несколько больше. Кстати, так же, совсем недавно интерфейс одной из основных разработок 1С – конфигурация Управление производственным предприятием – был полностью переведен на английский язык. Много раз я встречал вопросы о том, почему здесь не пишут об 1С. Ответ на них довольно очевиден – существует множество специализированных ресурсов, где можно оперативно обсудить все вопросы и что-то почитать.<br/>
+<br/>
+Есть все основания полагать, что эта статья здесь не выживет, но я все же рискну, потому что в 1С есть некоторые интересные вещи, о которых стоит рассказать.<br/>
+<br/>
+С некоторых пор в 1С 8.х появилась возможность использования веб-сервисов: 1С может выступать как поставщиком, так и потребителем. В этой статье я покажу, как использовать 1С в качестве потребителя на примере получения курсов валют с сервера ЦБР.<br/>
+<a name="habracut"></a><br/>
+<h4>Веб-сервис</h4><br/>
+У Центробанка существует веб-сервис для получения ежедневных данных: курсы валют, новости, динамика курсов и т.д. Описание сервиса можно найти здесь <a href="http://www.cbr.ru/scripts/Root.asp?Prtid=DWS">http://www.cbr.ru/scripts/Root.asp?Prtid=DWS</a>. Нас интересует один из методов этого сервиса: <b>GetCursOnDate(On_date)</b> – получение курсов валют на заданную дату. В метод передается один аргумент <b>On_date</b> – это дата, на которую требуется получить курсы. В результате возвращается XML, содержащий таблицу <b>ValuteCursOnDate</b> (сами курсы и сопутствующая информация). <br/>
+<br/>
+<h4>Конфигурирование</h4><br/>
+Для разработки я взял 1С 8.2 (8.2.15.317 в моем случае) и создал пустую конфигурацию. Для использования внешних веб-сервисов предусмотрен объект WS-ссылки, но использовать его не обязательно, к сервису можно обращаться динамически из кода. Я буду использовать первый вариант, а затем покажу, как можно использовать второй. В конфигурации создал обработку и назвал ее «ЗагрузкаКурсовВалютЦБР». Добавил форму (управляемую) и сделал ее основной. На форме я создал реквизиты и разместил элементы управления так, как показано на рисунке.<br/>
+<br/>
+<img src="https://habrastorage.org/getpro/habr/post_images/8d7/420/668/8d7420668a65b4217f7d41467dcf6c7c.png"/><br/>
+<br/>
+Сейчас самое главное – создаем ссылку на описание веб-сервиса. В конфигурации добавляем новый объект типа WS-ссылка. В появившемся окне указываем ссылку на WSDL (описание данного формата выходит за рамки статьи, вы можете <a href="http://ru.wikipedia.org/wiki/WSDL">почитать о нем на Википедии</a>): <a href="http://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?WSDL">http://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?WSDL</a>.<br/>
+<br/>
+<img src="https://habrastorage.org/getpro/habr/post_images/cbf/e75/a06/cbfe75a06fdc7de9ffe9ca9f9f569628.png"/><br/>
+<br/>
+1С на основании полученного описания автоматически создаст визуальную карту веб-сервиса. Можно увидеть название веб-сервиса, посмотреть какие у него доступны операции а так же используемые типы данных.<br/>
+<br/>
+<img src="https://habrastorage.org/getpro/habr/post_images/d65/8b4/7f7/d658b47f75e9630b4fe8a63c22d3bb37.png"/><br/>
+<br/>
+Конфигурирование на этом почти закончено, осталось сделать пару штрихов для того, чтобы наше приложение выглядело более эстетично. Кликнем правой кнопкой мыши по корню конфигурации и вызовем меню «Открыть командный интерфейс рабочего стола». В появившемся окне необходимо снять флаг «Видимость» напротив обработки «Загрузка курсов валют ЦБР». Нажмем кнопку Ок. Далее еще правый клик по корню конфигурации и вызовем меню «Открыть рабочую область рабочего стола», там сделаем настройку как на рисунке:<br/>
+<br/>
+<img src="https://habrastorage.org/getpro/habr/post_images/15a/bc0/19e/15abc019eb5acff8836e92381c8ad908.png"/><br/>
+<br/>
+Эти настройки позволят нам отобразить форму обработки прямо на рабочем столе (имеется ввиду рабочий стол программы 1С) в режиме 1С Предприятие. <br/>
+<br/>
+<h4>Программирование</h4><br/>
+Теперь осталось наполнить смыслом нашу обработку: заставить ее получать курсы валют и отображать в таблице на форме. В режиме редактирования формы необходимо добавить новую команду формы, назовем ее ЗагрузитьВалюты. Эту команду необходимо связать с кнопкой, расположенной на форме. Действие для команды заполним следующим кодом (прим. автора: ничего себе, на хабре есть подсветка кода 1С, правда она работает не корректно):<br/>
+<br/>
+<pre><code class="1c">&НаКлиенте
+Процедура ЗагрузитьВалюты(Команда)
+	
+	Если НЕ ЗначениеЗаполнено(ДатаЗагрузки) Тогда 
+		Сообщить(&quot;Не выбрана дата загрузки!&quot;, СтатусСообщения.Важное);
+		Возврат;
+	КонецЕсли;
+	
+	ТаблицаКурсовВалют.Очистить();
+	ЗагрузитьКурсыВалют(ДатаЗагрузки);
+	
+КонецПроцедуры
+</code></pre><br/>
+Здесь сначала проверяется, заполнена ли дата (если не заполнена, то сообщаем об этом пользователю и больше ничего не делаем). Затем очищается таблица, расположенная на форме и вызывается процедура ЗагрузитьКурсыВалют(), в которую передается дата.<br/>
+<br/>
+Код процедуры ЗагрузитьКурсыВалют(), пояснения данны в комментариях к коду:<br/>
+<br/>
+<pre><code class="1c">Процедура ЗагрузитьКурсыВалют(фДатаЗагрузки)
+		
+	//Создаем прокси для обращения к внешнему веб-сервису,
+	// передаем в функцию URI пространства имен, имя сервиса, имя порта.
+	Прокси = WSСсылки.CBR_DailyInfoWebServ.СоздатьWSПрокси(
+                                         &quot;http://web.cbr.ru/&quot;, &quot;DailyInfo&quot;, &quot;DailyInfoSoap&quot;);
+	
+	//Получаем тип параметра, который передается в метод GetCursOnDate.
+	ТипWSПараметра = Прокси.ФабрикаXDTO.Пакеты.Получить(
+                                        &quot;http://web.cbr.ru/&quot;).Получить(&quot;GetCursOnDate&quot;);
+	//Создаем параметр на основе типа и заполняем значение параметра On_Date.
+	WSПараметр	   = Прокси.ФабрикаXDTO.Создать(ТипWSПараметра);
+	WSПараметр.On_Date	= фДатаЗагрузки;
+	
+	//Вызываем метод веб-сервиса, записываем результат в переменную КурсыВалют.
+	КурсыВалют = Прокси.GetCursOnDate(WSПараметр);
+	
+	//Перебираем таблицу ValuteCursOnDate, каждое значение таблицы
+	// добавляем в таблицу на форме (колонки заполняем соответствующими значениями).
+	Для Каждого Элемент Из КурсыВалют.GetCursOnDateResult.diffgram.ValuteData.ValuteCursOnDate Цикл 
+		НоваяСтрокаТЗ = ТаблицаКурсовВалют.Добавить();
+		НоваяСтрокаТЗ.НазваниеВалюты      = Элемент.Vname;
+		НоваяСтрокаТЗ.Номинал             = Элемент.Vnom;
+		НоваяСтрокаТЗ.ЦифровойКодВалюты   = Элемент.Vcode;
+		НоваяСтрокаТЗ.СимвольныйКодВалюты = Элемент.VChCode;
+		НоваяСтрокаТЗ.КурсВалюты          = Элемент.Vcurs;
+	КонецЦикла;
+	
+КонецПроцедуры
+</code></pre><br/>
+Теперь можно обновлять конфигурацию БД (F7) и запускать 1С Предприятие (F5). Если все сделали верно, то должны увидеть окно как на рисунке ниже:<br/>
+<br/>
+<img src="https://habrastorage.org/getpro/habr/post_images/1bf/8a9/cea/1bf8a9ceab7fd044379accc9b462d3a9.png"/><br/>
+<br/>
+Чтобы проверить результат, нам нужно ввести дату, на которую хотим получить курсы валют и нажать на кнопку «Загрузить валюты». В случае успешного запроса, таблица на форме заполнится значениями курсов:<br/>
+<br/>
+<img src="https://habrastorage.org/getpro/habr/post_images/1fb/696/d91/1fb696d9163fff16c8511892873545f3.png"/><br/>
+<br/>
+Напоследок хочу показать, как можно обратиться динамически к внешнему веб-сервису, то есть без добавления объекта WS-ссылка. Таким образом, мы можем использовать такие веб-сервисы из внешних обработок без привязки к конфигурации.<br/>
+<br/>
+В процедуре ЗагрузитьКурсыВалют() строку<br/>
+<br/>
+<pre><code class="1c">Прокси = WSСсылки.CBR_DailyInfoWebServ.СоздатьWSПрокси(&quot;http://web.cbr.ru/&quot;, &quot;DailyInfo&quot;, &quot;DailyInfoSoap&quot;);
+</code></pre><br/>
+необходимо заменить двумя следующими строками<br/>
+<br/>
+<pre><code class="1c">Определения = Новый WSОпределения(&quot;http://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?WSDL&quot;);
+Прокси = Новый WSПрокси(Определения, &quot;http://web.cbr.ru/&quot;, &quot;DailyInfo&quot;, &quot;DailyInfoSoap&quot;);
+</code></pre><br/>
+Сначала мы создаем так называемые определения для веб-сервиса из его WSDL. Затем так же создаем прокси для обращения к нему.<br/>
+<br/>
+Как видно, использовать внешние веб-сервисы из 1С в целом довольно просто (хотя и есть некоторая сложность в понимании определения типов, у меня в том числе).<br/>
+<br/>
+Если данная публикация найдет здесь отклик, то есть еще несколько тем, о которых можно рассказать. <br/>
+<br/>
+По <a href="http://dl.dropbox.com/u/30369825/WebService_CBR.cf">ссылке</a> можно скачать конфигурацию с примером (cf-файл).
+
+      
+      <div class="clear"></div>
+    </div>
+
+    
+  <ul class="tags icon_tag">
+      <li ><a href="https://habrahabr.ru/search/?q=%5B1%D1%81%20%D0%BF%D1%80%D0%B5%D0%B4%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%208%5D&target_type=posts" rel="tag">1с предприятие 8</a>, </li>
+      <li ><a href="https://habrahabr.ru/search/?q=%5Bweb-services%5D&target_type=posts" rel="tag">web-services</a>, </li>
+      <li ><a href="https://habrahabr.ru/search/?q=%5B%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0%5D&target_type=posts" rel="tag">разработка</a>, </li>
+      <li ><a href="https://habrahabr.ru/search/?q=%5B%D0%BA%D0%BE%D0%BD%D1%84%D0%B8%D0%B3%D1%83%D1%80%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%5D&target_type=posts" rel="tag">конфигурирование</a>, </li>
+      <li ><a href="https://habrahabr.ru/search/?q=%5B1%D1%81%20must%20die%5D&target_type=posts" rel="tag">1с must die</a></li>
+  </ul>
+
+
+      <div class="infopanel_wrapper">
+    <ul class="postinfo-panel postinfo-panel_post" id="infopanel_post_148658">
+
+          <li class="postinfo-panel__item">
+            <div class="voting-wjt voting-wjt_infopanel js-voting  ">
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи.">
+                  <span>&uarr;</span>
+                </button>
+
+              <div class="voting-wjt__counter voting-wjt__counter_positive  js-mark">
+                  <span class="voting-wjt__counter-score js-score" title="Общий рейтинг 8: &uarr;6 и &darr;2">+4</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи.">
+                  <span>&darr;</span>
+                </button>
+
+            </div>
+          </li>
+
+      <li class="postinfo-panel__item">
+        <div class="views-count_post" title="Просмотры публикации">74,6k</div>
+      </li>
+
+      <li class="postinfo-panel__item">
+        <div class="favorite-wjt favorite">
+            <button type="button" disabled class="favorite-wjt__button favorite-wjt__button_disabled" onclick="return false;" title="Только зарегистрированные пользователи могут добавлять публикации в избранное">
+              <span>Добавить в избранное</span>
+            </button>
+          <span class="favorite-wjt__counter js-favs_count" title="Количество пользователей, добавивших публикацию в избранное">54</span>
+        </div>
+      </li>
+
+
+
+
+      <!-- шеринг в соцсети -->
+        <li class="postinfo-panel__item postinfo-panel__item_socials  postinfo-panel__item_socials_right ">
+          <ul class="post-share">
+            <li class="post-share__item">
+              <a href="https://twitter.com/intent/tweet?text=%D0%98%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5+%D0%B2%D0%BD%D0%B5%D1%88%D0%BD%D0%B8%D1%85+%D0%B2%D0%B5%D0%B1-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D0%BE%D0%B2+%D0%B2+1%D0%A1+%D0%BD%D0%B0+%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D0%B5+%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8+%D0%BA%D1%83%D1%80%D1%81%D0%BE%D0%B2+%D0%B2%D0%B0%D0%BB%D1%8E%D1%82+http://habr.ru/p/148658/+via+%40habrahabr+%23habr" class="post-share__item-link twitter" title="Опубликовать ссылку в Twitter" target="_blank"></a>
+            </li>
+            <li class="post-share__item">
+              <a href="https://vk.com/share.php?url=https://habrahabr.ru/post/148658/" class="post-share__item-link vkontakte" title="Опубликовать ссылку во ВКонтакте" onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false"></a>
+            </li>
+            <li class="post-share__item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https://habrahabr.ru/post/148658/" class="post-share__item-link facebook" title="Опубликовать ссылку в Facebook" onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false"></a>
+            </li>
+            <li class="post-share__item">
+              <a href="https://getpocket.com/edit?url=https://habrahabr.ru/post/148658/" target="_blank" class="post-share__item-link pocket" title="Добавить ссылку в Pocket"></a>
+            </li>
+          </ul>
+        </li>
+
+      <!-- кнопка пожаловаться -->
+    </ul>
+  </div>
+
+
+        
+
+  <div class="author-info ">
+    <a href="/users/mix2000" class="author-info__image">
+        <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9.jpg" class="author-info__image-pic"/>
+    </a>
+
+    <div class="author-info__desc">
+      <div class="author-info__username">
+          <a href="/users/mix2000" class="author-info__name">Michael</a>
+        <a href="/users/mix2000" class="author-info__nickname">@mix2000</a>
+
+        <div class="karma__widjet voting-wjt voting-wjt_small js-karma  " title="Карма пользователя">
+
+
+          <div class="voting-wjt__counter voting-wjt__counter_positive">
+            <span class="voting-wjt__label">карма</span>
+            <span class="voting-wjt__counter-score js-karma_num">117,5</span>
+          </div>
+
+        </div>
+
+        <div class="user-rating" title="Рейтинг пользователя">
+          <span class="user-rating__label">рейтинг</span>
+          <span class="user-rating__value">0,0</span>
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+  </div>
+
+      </div>
+      <div class="privet" style="margin-top: 15px">
+<!--  AdRiver code START. Type:AjaxJS Site: habrahabr PZ: 0 BN: 13 -->
+<div class="html_banner" id="adriver_banner_883932549"></div>
+<a href="https://special.habrahabr.ru/advertising/" class="firskill__label">Реклама</a>
+
+<script type="text/javascript">
+    function show_inner_banner_block300(name, url){
+        if( typeof(name) !== 'undefined'){
+            if ($('.tabs').width() >= 620) { // блок расчитан на >= 620 пикселей
+                $('#adriver_banner_883932549').html('<iframe src="https://special.habrahabr.ru/api/htmlblock/'+name+'/?iframe&url='+encodeURIComponent(url)+'" width="100%" height="250"></iframe>')
+            }
+        }
+    }
+
+  $(function(){
+    var check_scroll_position = function() {
+      var height = $(window).height();
+      var scrollTop = $(window).scrollTop();
+      var scrollBottom = $(window).scrollTop() + height;
+      var blockTop = $('#adriver_banner_883932549').position().top;
+      var show = scrollTop < blockTop && blockTop < scrollBottom;
+
+      if( show ){
+        $( window ).off('scroll', check_scroll_position);
+        $( window ).trigger('show_bn3');
+      }
+    };
+
+
+    $( window ).on('show_bn3', function(){
+      var keyword = '';
+      if (typeof crtg_content !== 'undefined' && crtg_content) { keyword = crtg_content; }
+      var custom = { 4:ar_duo1 };
+        custom[1] = 'programming';
+      if ( typeof(adriver) !== 'undefined' ){
+          new adriver("adriver_banner_883932549", {sid:176776, bt:52, bn:13, custom: custom, keyword: keyword});
+      } else {
+          var adCls = makeAdClass();
+          $('.privet').attr('class', adCls).removeClass('privet');
+          $('.' + adCls).css({ 'margin-top' : '20px' }).html('<iframe src="https://habrahabr.ru/hauusbx/al/habrahabr/" width="100%" height="70" style="display: block !important;visibility: visible !important;"></iframe>');
+          if (typeof ga === 'function') { ga('HGM.send', 'event', 'anti_adblk', 'under_post',  'habrahabr'); }
+      }
+
+    });
+
+    $( window ).on('scroll', check_scroll_position);
+  });
+</script>
+
+<!--  AdRiver code END  -->
+</div>
+
+        
+
+    <div class="similar-posts">
+      <h2 class="similar-posts__title">Похожие публикации</h2>
+
+      <ul class="content-list content-list_posts">
+          <li class="content-list__item">
+            <div class="post-preview">
+              <div class="post-preview__rating">+17</div>
+              <div class="post-preview__desc">
+                <a class="post-preview__link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'similar_posts', 'common'); }" href="/post/255387/">Применение параллельных алгоритмов в среде 1С Предприятия</a>
+                <span class="post-preview__attrs inline-list inline-list_attrs">
+                  <span class="inline-list__item views-count">14,6k</span>
+                  <span class="inline-list__item favorites-count">100</span>
+                  <span class="inline-list__item comments-count">30</span>
+                </span>
+              </div>
+            </div>
+          </li>
+          <li class="content-list__item">
+            <div class="post-preview">
+              <div class="post-preview__rating">+11</div>
+              <div class="post-preview__desc">
+                <a class="post-preview__link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'similar_posts', 'common'); }" href="/post/165883/">Голосовой информатор через Skype для 1С: Предприятие</a>
+                <span class="post-preview__attrs inline-list inline-list_attrs">
+                  <span class="inline-list__item views-count">13,6k</span>
+                  <span class="inline-list__item favorites-count">73</span>
+                  <span class="inline-list__item comments-count">26</span>
+                </span>
+              </div>
+            </div>
+          </li>
+          <li class="content-list__item">
+            <div class="post-preview">
+              <div class="post-preview__rating">+18</div>
+              <div class="post-preview__desc">
+                <a class="post-preview__link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'similar_posts', 'common'); }" href="/post/93898/">Amazon Web Services предложила отказоустойчивую СУБД</a>
+                <span class="post-preview__attrs inline-list inline-list_attrs">
+                  <span class="inline-list__item views-count">1,4k</span>
+                  <span class="inline-list__item favorites-count">11</span>
+                  <span class="inline-list__item comments-count">5</span>
+                </span>
+              </div>
+            </div>
+          </li>
+      </ul>
+    </div>
+
+
+    </div>
+
+    <div class="sidebar_right js-sidebar_right">
+          <div class="no_please_one_one_one" style="min-height: 270px;">
+      <div id="adriver_banner_1863387959"></div>
+      <a href="https://special.habrahabr.ru/advertising/" class="firskill__label">Реклама</a>
+
+      <script type="text/javascript">
+        function show_bn1_block(name, url){
+          console.log('show' + name);
+          if( typeof(name) !== 'undefined'){
+            $.get('/html/'+name+'/1453985325/', function(html){
+                $('#adriver_banner_1863387959').html(html);
+                if( typeof(url) !== 'undefined'){
+                  $('.'+name+'_inner_banner .block_url').attr('href', url);
+                }
+            });
+          }
+        }
+
+        function show_bn1_new_block(name, url){
+            if( typeof(name) !== 'undefined'){
+                $('#adriver_banner_1863387959').html('<iframe src="https://habrahabr.ru/hauusbx/htmlblock300/'+name+'/?url='+encodeURIComponent(url)+'" width="100%" height="500"></iframe>')
+            }
+        }
+
+        $(function(){
+
+
+
+        // конвертирут кириллицу в cp1251
+        // doc: http://www.adriver.ru/doc/edu-n/pub/settargt/standtrgt/scentrgt/scentrgt.html#9
+        function esc(s){
+          for(var i=0,l=s.length,r='';i<l;i++){
+            var c = s.charCodeAt(i);r += String.fromCharCode(c>1039&&c<1104 ? c-848 : c==1105 ? 184 : c==1025 ? 168 : c);
+          }
+          return r;
+        }
+
+        var keyword = '';
+        if (typeof crtg_content !== 'undefined' && crtg_content) { keyword = crtg_content; }
+
+
+        var custom = {4:ar_duo1};
+          custom[1] = 'programming';
+
+        if ( typeof(adriver) !== 'undefined'){
+            $('.no_please_one_one_one').css({ 'margin-bottom': '20px'});
+            new adriver("adriver_banner_1863387959", {sid: 176776, bt: 52, bn: 1, custom: custom, keyword: keyword});
+        }
+
+        var check_scroll_position10 = function() {
+          var height = $(window).height();
+          var scrollTop = $(window).scrollTop();
+          if ($('#adriver_banner_1863387959').length){
+            var blockTop = $('#adriver_banner_1863387959').position().top;
+          }
+          var show = scrollTop < (blockTop + 900) && typeof(bn2Showed) != 'undefined';
+          if( show ){
+            $( window ).off('scroll', check_scroll_position10);
+            $( window ).trigger('show_bn10');
+          }
+        };
+
+        $( window ).on('show_bn10', function(){
+          $('#adriver_banner_1863387959').html('');
+          var pz = Math.floor(Math.random()*3+1);
+          var uu = new adriver("adriver_banner_1863387959", { sid: 176776, bt: 52, bn: 1, pz: pz});
+          uu.reload();
+        });
+
+        $( window ).on('scroll', check_scroll_position10);
+
+        }());
+
+        if ( typeof(adriver) === 'undefined' || typeof(adb1) === 'undefined'){
+
+            var adCls = makeAdClass();
+
+            $('.no_please_one_one_one').attr('class', adCls).css({ 'cssText' : 'display: block !important;visibility: visible !important' }).removeClass('no_please_one_one_one');
+
+            var bn1 = [{"image":"https:\/\/habrastorage.org\/files\/93e\/dac\/fcb\/93edacfcbf0541b1a04079f7e4d570bb.jpg","link":"http:\/\/special.geektimes.ru\/hp\/360\/","title":"hp360"},{"image":"https:\/\/habrastorage.org\/files\/354\/6d4\/48a\/3546d448a9324432b4e2802134cbe504.jpg","link":"http:\/\/bit.ly\/22pO1fo","title":"lenovo"},{"image":"https:\/\/habrastorage.org\/files\/b84\/9b8\/b62\/b849b8b629e34f0086ebdfd267060a5a.png","link":"http:\/\/bit.ly\/1NOx20W","title":"bizspark"},{"image":"https:\/\/habrastorage.org\/files\/241\/1c2\/8d3\/2411c28d3d5747e1827a4343e5ad564f.jpg","link":"http:\/\/bit.ly\/1NMqu1Y","title":"MS 5 account"}];
+
+            if (bn1)
+            {
+                bn1 = bn1[getRandomInt(0, bn1.length - 1)];
+
+                if (typeof(bn1.type) !== 'undefined' && bn1.type == 'htmlblock')
+                    $('.' + adCls).html('<iframe src="https://habrahabr.ru/hauusbx/htmlblock300/'+bn1.title+'/?url='+encodeURIComponent(bn1.link)+'" width="100%" height="500" style="display: block !important;visibility: visible !important"></iframe>');
+                else
+                    $('.' + adCls).html('<a href="' + bn1.link + '" target="_blank" style="width:300px;height:500px;background:url(\'' + bn1.image + '\');display: block !important;visibility: visible !important"></a>');
+
+                $('.' + adCls).children().css({ 'margin-bottom' : '20px' });
+
+                if (typeof ga === 'function') { ga('HGM.send', 'event', 'anti_adblk', 'bn1',  'habrahabr'); }
+            }
+        }
+
+      </script>
+  </div>
+
+
+        
+
+  <div class="live-broadcast live-broadcast_habrahabr daily_best_posts">
+    <h2 class="live-broadcast__title">Самое читаемое</h2>
+    <div class="live-broadcast__tabs tabs" id="broadcast_tabs_posts">
+      <ul class="tabs__menu tabs__menu_posts menu menu_inline">
+        <li class="menu__item"><a href="#broadcast_posts_now" class="menu__item-tab">Сейчас</a></li>
+        <li class="menu__item"><a href="#broadcast_posts_week" class="menu__item-tab">Неделя</a></li>
+        <li class="menu__item"><a href="#broadcast_posts_month" class="menu__item-tab">Месяц</a></li>
+      </ul>
+
+        <div class="tabs__content" id="broadcast_posts_now">
+            <ul class="content-list content-list_comments">
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276249/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Лучшие бесплатные коллекции векторных иконок</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276249/#comments" class="content-list__item-counter icon_comments">4</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/273393/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Простейшие клеточные автоматы и их практическое применение</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/273393/#comments" class="content-list__item-counter icon_comments">7</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/latera/blog/276219/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Исследователи нашли множество критических уязвимостей в платежных протоколах</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/latera/blog/276219/#comments" class="content-list__item-counter icon_comments">1</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276211/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Исследование распространенной малвари под Android</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276211/#comments" class="content-list__item-counter icon_comments">40</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276173/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Практические методы самомотивации программиста</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276173/#comments" class="content-list__item-counter icon_comments">61</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276171/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Доломать Windows, чтобы починить: «Было предпринято несколько попыток, но причину проблемы определить не удалось»</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276171/#comments" class="content-list__item-counter icon_comments">11</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/hpe/blog/276179/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Архитектура WLAN: что выбрать?</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/hpe/blog/276179/#comments" class="content-list__item-counter icon_comments">0</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276247/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Работы с JSON в Swift</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276247/#comments" class="content-list__item-counter icon_comments">3</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276141/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Обходим блокировку сайта DPI двумя скриптами</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276141/#comments" class="content-list__item-counter icon_comments">52</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276195/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Алгоритмы для поиска палиндромов</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276195/#comments" class="content-list__item-counter icon_comments">13</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tabs__content" id="broadcast_posts_week">
+            <ul class="content-list content-list_comments">
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/infopulse/blog/275951/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Несколько вещей, о которых стоит помнить программисту в возрасте</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/infopulse/blog/275951/#comments" class="content-list__item-counter icon_comments">99</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275993/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Откуда берутся плохие программисты и в чем их проблема</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275993/#comments" class="content-list__item-counter icon_comments">131</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275963/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Python и красивые ножки: как я бы знакомил сына с математикой и программированием</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275963/#comments" class="content-list__item-counter icon_comments">62</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275749/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Миссия невыполнима: геолокация на Android без сжирания батарейки</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275749/#comments" class="content-list__item-counter icon_comments">10</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/it-grad/blog/276001/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Почему жесткие диски останутся с нами надолго</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/it-grad/blog/276001/#comments" class="content-list__item-counter icon_comments">5</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276173/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Практические методы самомотивации программиста</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276173/#comments" class="content-list__item-counter icon_comments">61</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275861/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">«Hello World!» на C массивом int main[]</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275861/#comments" class="content-list__item-counter icon_comments">143</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276135/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Parse.com закрывается</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276135/#comments" class="content-list__item-counter icon_comments">66</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275909/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Десять популярных SEO – мифов о продвижении в Google</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275909/#comments" class="content-list__item-counter icon_comments">29</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276141/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Обходим блокировку сайта DPI двумя скриптами</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276141/#comments" class="content-list__item-counter icon_comments">52</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tabs__content" id="broadcast_posts_month">
+            <ul class="content-list content-list_comments">
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/272937/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Почему ваш любимый мессенджер должен умереть</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/272937/#comments" class="content-list__item-counter icon_comments">339</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/mailru/blog/274855/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Опасное видео: как я нашёл уязвимость в видеохостингах и не умер через 7 дней</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/mailru/blog/274855/#comments" class="content-list__item-counter icon_comments">66</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/infopulse/blog/275951/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Несколько вещей, о которых стоит помнить программисту в возрасте</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/infopulse/blog/275951/#comments" class="content-list__item-counter icon_comments">99</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275993/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Откуда берутся плохие программисты и в чем их проблема</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275993/#comments" class="content-list__item-counter icon_comments">131</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/1cloud/blog/274735/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Сколько на самом деле стоит гигабайт трафика? (В самом худшем случае)</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/1cloud/blog/274735/#comments" class="content-list__item-counter icon_comments">63</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/274621/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Инструменты для взлома, мелькавшие в сериале Mr Robot</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/274621/#comments" class="content-list__item-counter icon_comments">83</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275135/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Почему я пишу игры на C (да, на C)</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275135/#comments" class="content-list__item-counter icon_comments">251</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/dca/blog/274027/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Рекурентная нейронная сеть в 10 строчек кода оценила отзывы зрителей нового эпизода “Звездных войн”</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/dca/blog/274027/#comments" class="content-list__item-counter icon_comments">47</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/274885/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">Как я 8 месяцев переписывал Dcoin на Go… про Катю, в общем</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/274885/#comments" class="content-list__item-counter icon_comments">69</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275543/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'post'); }" class="content-list__item-link">В ядре Linux обнаружили уязвимость, позволяющую получить права суперпользователя</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275543/#comments" class="content-list__item-counter icon_comments">42</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </div>
+
+        
+
+
+        <div class="ya_banners">
+  <div id="yandex_ad"></div>
+  <script type="text/javascript">
+
+    $('.js-sidebar_right').ready(function(){
+      var contentAreaHeight = $('.js-content_left').outerHeight(true);
+      var sidebarAreaHeight = $('.js-sidebar_right').outerHeight(true) + 125;
+      var sidebarAreaHeight2 = sidebarAreaHeight + 250;
+
+      if ( contentAreaHeight > sidebarAreaHeight2 ) {
+        (function(w, d, n, s, t) {
+          w[n] = w[n] || [];
+          w[n].push(function() {
+            Ya.Direct.insertInto(149298, "yandex_ad", {
+              ad_format: "direct",
+              font_family: "verdana",
+              type: "posterVertical",
+              border_type: "block",
+              limit: 2,
+              title_font_size: 3,
+              border_radius: true,
+              links_underline: false,
+              site_bg_color: "FFFFFF",
+              border_color: "FBE5C0",
+              title_color: "0066CC",
+              url_color: "006600",
+              text_color: "000000",
+              hover_color: "0066FF",
+              sitelinks_color: "0066CC",
+              favicon: true,
+              no_sitelinks: false
+            });
+          });
+          t = d.getElementsByTagName("script")[0];
+          s = d.createElement("script");
+          s.src = "//an.yandex.ru/system/context.js";
+          s.type = "text/javascript";
+          s.async = true;
+          t.parentNode.insertBefore(s, t);
+        })(window, document, "yandex_context_callbacks");
+      }else if (contentAreaHeight > sidebarAreaHeight){
+        (function(w, d, n, s, t) {
+          w[n] = w[n] || [];
+          w[n].push(function() {
+            Ya.Direct.insertInto(149298, "yandex_ad", {
+              ad_format: "direct",
+              font_family: "verdana",
+              type: "posterVertical",
+              border_type: "block",
+              limit: 1,
+              title_font_size: 3,
+              border_radius: true,
+              links_underline: false,
+              site_bg_color: "FFFFFF",
+              border_color: "FBE5C0",
+              title_color: "0066CC",
+              url_color: "006600",
+              text_color: "000000",
+              hover_color: "0066FF",
+              sitelinks_color: "0066CC",
+              favicon: true,
+              no_sitelinks: false
+            });
+          });
+          t = d.getElementsByTagName("script")[0];
+          s = d.createElement("script");
+          s.src = "//an.yandex.ru/system/context.js";
+          s.type = "text/javascript";
+          s.async = true;
+          t.parentNode.insertBefore(s, t);
+        })(window, document, "yandex_context_callbacks");
+      }
+    });
+  </script>
+</div>
+
+
+        
+        
+        
+    </div>
+  </div>
+
+  <div class="column-wrapper column-wrapper_comments">
+    <div class="content_left">
+            <div class="comments_list " id="comments">
+
+        <h2 class="title ">Комментарии (<span
+            id="comments_count">13</span>)
+            
+
+        </h2>
+
+        
+
+              <div class="comment_item" id="comment_5021824" >
+  
+    <span class="parent_id" data-parent_id="0"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="5021824">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/nikitok/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/d09/ff8/1d9/d09ff81d9c9f84fc76446af91c0a2920_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/nikitok/" class="comment-item__username">nikitok</a>
+          <time class="comment-item__time_published">30 июля 2012 в 15:51</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5021824" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5021824" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark voting-wjt__counter_positive ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 1: &uarr;1 и &darr;0">+1</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Пришлось мне как разработчику WCF REST сервисов столкнуться с 1С-разработчиками, которые реализовывали 1С-клиент (как потребителя контента). Так вот, при работе с web-ресурсами по REST, которые принимают запросы в UTF-8, 1С отправляет HTTP-запрос через создание текстового файла, записи в него тела запроса, и отправки (POST или PUT) только что созданного файла. Это я о кросс-платформенном решении (без использовании XMLHTTPRequest, т.к. через вызов COM-объекта все работает):<br/>
+<br/>
+<code>HTTPСоединение = Новый HTTPСоединение(urladdress);
+HTTPСоединение.ОтправитьДляОбработки(&quot;c:\code\1.txt&quot;, &quot;Service.svc/session&quot;, &quot;c:\code\2.txt&quot;, &quot;Content-Type:application/json&quot; + Символы.ВК + Символы.ПС + &quot;charset:UTF-8&quot;);</code><br/>
+<br/>
+Особенностью решения 1С-ников было то, что при отправке данных методами POST или PUT, заголовки передаются через аргументы функции, а тело — через файл. Грабли были в том, что при создании файла в кодировке UTF8 1С-ка всегда пишет BOM-символ в начале файла и web-сервис, получая запрос от 1С-клиента с неверным Content-Length'ом (встроенная функция определения длины игнорирует BOM-символ, но это можно исправить вручную) и с BOM-символом в середине тела HTTP-запроса (не в начале) впадает в ступор. Также из-за этого символа.<br/>
+Может ли автор статьи рассказать, как обстоят дела с кросс-платформенными запросами в 1С 8.3 при работе с веб-сервисами не по SOAP, а по REST? HTTP-api доработали?
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5021824">
+        <div class="comment_item" id="comment_5021881" >
+  
+    <span class="parent_id" data-parent_id="5021824"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  is_topic_starter  " rel="5021881">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__username">mix2000</a>
+          <time class="comment-item__time_published">30 июля 2012 в 16:09</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5021881" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5021881" data-parent_id="5021824" title="Показать ветку комментариев"></span>
+              <a href="#comment_5021824" class="icon_comment-parent js-comment_parent" data-id="5021881" data-parent_id="5021824" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5021881" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          К сожалению, я еще не углублялся в изучение возможностей 8.3, она вышла менее месяца назад.
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5021881">
+      
+    </div>
+  </div>
+  <div class="comment_item" id="comment_7181894" >
+  
+    <span class="parent_id" data-parent_id="5021824"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="7181894">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/sacred1972/" class="comment-item__avatar">
+              <span class="comment-item__avatar-img_default user-pic_pink"></span>
+          </a>
+          <a href="https://habrahabr.ru/users/sacred1972/" class="comment-item__username">sacred1972</a>
+          <time class="comment-item__time_published"> 9 января 2014 в 21:07</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_7181894" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="7181894" data-parent_id="5021824" title="Показать ветку комментариев"></span>
+              <a href="#comment_5021824" class="icon_comment-parent js-comment_parent" data-id="7181894" data-parent_id="5021824" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_7181894" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Нифига они не доработали. Понимаю, что некропост, но просто сейчас занимаюсь тем же со стороны 1с, задолбало. Формировать запрос через внешний файл ПРИХОДИТСЯ, хотя в 1с есть возможность отправлять запрос без использования внешнего файла, но в этом режиме граблей раскидано ещё больше, поэтому приходится юзать файлы. А BOM-заголовок от файла можно отрезать с помощью такого извращения:<br/>
+<br/>
+ЗТ = Новый ЗаписьТекста(ИмяФайла, КодировкаТекста.ANSI);<br/>
+ЗТ.Закрыть(); <br/>
+ <br/>
+ЗТ = Новый ЗаписьТекста(ИмяФайла,,, Истина); <br/>
+ЗТ.Записать(ТекстПосланияСтрокой);<br/>
+ЗТ.Закрыть();<br/>
+<br/>
+При этом файл ИмяФайла получается в кодировке UTF-8, но без BOM-заголовка.
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_7181894">
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+              <div class="comment_item" id="comment_5023559" >
+  
+    <span class="parent_id" data-parent_id="0"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  is_topic_starter  " rel="5023559">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__username">mix2000</a>
+          <time class="comment-item__time_published">31 июля 2012 в 09:18</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5023559" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5023559" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Видимо и правда, целевой аудитории здесь почти нет. Ну да ладно. :-)
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5023559">
+        <div class="comment_item" id="comment_5023795" >
+  
+    <span class="parent_id" data-parent_id="5023559"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="5023795">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/xaoc80/" class="comment-item__avatar">
+              <span class="comment-item__avatar-img_default user-pic_green"></span>
+          </a>
+          <a href="https://habrahabr.ru/users/xaoc80/" class="comment-item__username">xaoc80</a>
+          <time class="comment-item__time_published">31 июля 2012 в 10:52</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5023795" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5023795" data-parent_id="5023559" title="Показать ветку комментариев"></span>
+              <a href="#comment_5023559" class="icon_comment-parent js-comment_parent" data-id="5023795" data-parent_id="5023559" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5023795" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Ошибаетесь, есть=)<br/>
+Работа с вэб сервисами, безусловно, интересна<br/>
+Сам я давно уже не писал что — либо в 1С, но регулярно слежу за новыми изменениями и анонасами<br/>
+И изменения эти, надо сказать радуют, особенно курс на Linux.<br/>
+В свое время писал внешние компоненты и меня просто убивали некоторые вещи.<br/>
+К примеру, невозможность передать/вернуть массив из внешней компоненты, написанной на 1С Native API.<br/>
+Казалось бы очевидная вещь, но не сподобились сделать<br/>
+В итоге пришлось писать дикие грабли в виде собственной сериализации на основе строк.<br/>
+Получается, реализовать что-то серъезное в Native API просто не получится, все равно придется писать свой сервис.<br/>
+<br/>
+
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5023795">
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+              <div class="comment_item" id="comment_5033901" >
+  
+    <span class="parent_id" data-parent_id="0"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="5033901">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/krak/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/2c8/8ef/321/2c88ef3212af09e1c21830e808affad3_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/krak/" class="comment-item__username">krak</a>
+          <time class="comment-item__time_published"> 3 августа 2012 в 20:25</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5033901" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5033901" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Пытался я написать конфигурацию по работе с WS, однако столкнулся с проблемой некорректного определения 1С пустой даты.<br/>
+На сайте форуме <a href="http://devtrainingforum.v8.1c.ru/forum/thread.jsp?id=597342#597342">http://devtrainingforum.v8.1c.ru/forum/thread.jsp?id=597342#597342</a> никто не подсказал вариант решения. Может у Вас больше опыта и есть решение моей проблемы?<br/>
+
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5033901">
+        <div class="comment_item" id="comment_5036172" >
+  
+    <span class="parent_id" data-parent_id="5033901"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  is_topic_starter  " rel="5036172">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__username">mix2000</a>
+          <time class="comment-item__time_published"> 5 августа 2012 в 18:28</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5036172" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5036172" data-parent_id="5033901" title="Показать ветку комментариев"></span>
+              <a href="#comment_5033901" class="icon_comment-parent js-comment_parent" data-id="5036172" data-parent_id="5033901" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5036172" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Похоже, вот здесь есть решение проблемы: <a href="http://www.mantisbt.org/forums/viewtopic.php?f=11&t=20480">www.mantisbt.org/forums/viewtopic.php?f=11&t=20480</a><br/>
+Попробуйте, расскажите потом.
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5036172">
+        <div class="comment_item" id="comment_5037127" >
+  
+    <span class="parent_id" data-parent_id="5036172"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="5037127">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/krak/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/2c8/8ef/321/2c88ef3212af09e1c21830e808affad3_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/krak/" class="comment-item__username">krak</a>
+          <time class="comment-item__time_published"> 6 августа 2012 в 08:28</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5037127" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5037127" data-parent_id="5036172" title="Показать ветку комментариев"></span>
+              <a href="#comment_5036172" class="icon_comment-parent js-comment_parent" data-id="5037127" data-parent_id="5036172" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5037127" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Он обошел тем, что сменил с типа даты, на тип строка, но это немного не то. Хотелось решить именно средствами 1С. Хотя кое-что придется поправить, указав, что это поле можеть быть пустым.
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5037127">
+        <div class="comment_item" id="comment_5038152" >
+  
+    <span class="parent_id" data-parent_id="5037127"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  is_topic_starter  " rel="5038152">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__username">mix2000</a>
+          <time class="comment-item__time_published"> 6 августа 2012 в 14:01</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5038152" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5038152" data-parent_id="5037127" title="Показать ветку комментариев"></span>
+              <a href="#comment_5037127" class="icon_comment-parent js-comment_parent" data-id="5038152" data-parent_id="5037127" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5038152" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Здесь похоже, что 1С не может правильно обработать поле due_date. И на стороне 1С сделать ничего не получится.<br/>
+Нужно либо сделать так, как по ссылке выше, либо так, чтобы это поле было всегда заполнено, либо вообще исключить его из пакета, если оно не нужно в 1С.
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5038152">
+        <div class="comment_item" id="comment_5042296" >
+  
+    <span class="parent_id" data-parent_id="5038152"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="5042296">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/krak/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/2c8/8ef/321/2c88ef3212af09e1c21830e808affad3_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/krak/" class="comment-item__username">krak</a>
+          <time class="comment-item__time_published"> 7 августа 2012 в 20:52</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5042296" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5042296" data-parent_id="5038152" title="Показать ветку комментариев"></span>
+              <a href="#comment_5038152" class="icon_comment-parent js-comment_parent" data-id="5042296" data-parent_id="5038152" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5042296" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Как бы его только в 1С исключить?
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5042296">
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+  <div class="comment_item" id="comment_5040823" >
+  
+    <span class="parent_id" data-parent_id="5033901"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  is_topic_starter  " rel="5040823">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/6ea/23f/ef5/6ea23fef5e0b28287fe6a836cdb896e9_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/mix2000/" class="comment-item__username">mix2000</a>
+          <time class="comment-item__time_published"> 7 августа 2012 в 12:53</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_5040823" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="5040823" data-parent_id="5033901" title="Показать ветку комментариев"></span>
+              <a href="#comment_5033901" class="icon_comment-parent js-comment_parent" data-id="5040823" data-parent_id="5033901" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_5040823" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          Кстати, забыл спросить, а вы какую версию платформы используете?<br/>
+Простой в 8.2.15.317 нет конструкторов WSОпределения и WSПрокси со столькими параметрами.
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_5040823">
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+              <div class="comment_item" id="comment_7219726" >
+  
+    <span class="parent_id" data-parent_id="0"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="7219726">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/FeaMor/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/7c4/bfb/7ea/7c4bfb7ea906031e7c402df7739303a6_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/FeaMor/" class="comment-item__username">FeaMor</a>
+          <time class="comment-item__time_published">19 января 2014 в 23:11</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_7219726" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_7219726" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          А как обновлять курсы валют, кладр, если система не имеет выхода в интернет? оффлайн версии где скачивать и как ставить7
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_7219726">
+        <div class="comment_item" id="comment_7491943" >
+  
+    <span class="parent_id" data-parent_id="7219726"></span>
+
+    <div class="comment_body ">
+        <div class="info comments-list__item comment-item  " rel="7491943">
+
+          <div class="folding-dot-holder"><div class="folding-dot"></div></div>
+
+          <a href="https://habrahabr.ru/users/Apatic/" class="comment-item__avatar">
+              <img src="//habrastorage.org/getpro/habr/avatars/f7c/9bf/7a9/f7c9bf7a914cb86e410c9ddcf7e0b2d5_small.jpg" alt="" class="comment-item__avatar-img"/>
+          </a>
+          <a href="https://habrahabr.ru/users/Apatic/" class="comment-item__username">Apatic</a>
+          <time class="comment-item__time_published">13 апреля 2014 в 18:16</time>
+
+          <span class="comment-item__controls">
+            <a href="#comment_7491943" class="icon_comment-anchor" title="Ссылка на комментарий"></a>
+
+
+              <span class="icon_comment-tree js-comment_tree" data-id="7491943" data-parent_id="7219726" title="Показать ветку комментариев"></span>
+              <a href="#comment_7219726" class="icon_comment-parent js-comment_parent" data-id="7491943" data-parent_id="7219726" title="Показать предыдущий комментарий"></a>
+            <span class="js-comment_chidren" title="Вернуться к ответу"></span>
+          </span>
+
+            <div id="voting_7491943" class="voting-wjt voting-wjt_comments js-voting   ">
+
+              <div class="voting-wjt__counter js-mark  ">
+                <span class="voting-wjt__counter-score js-score" title="Всего 0: &uarr;0 и &darr;0">0</span>
+              </div>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_plus js-plus" title="Голосовать могут только зарегистрированные пользователи"><span>&uarr;</span></button>
+
+                <button type="button" disabled class="voting-wjt__button voting-wjt__button_minus js-minus" title="Голосовать могут только зарегистрированные пользователи"><span>&darr;</span></button>
+            </div>
+        </div>
+
+        <div class="message html_format ">
+          С диска ИТС<br/>
+Также файлы КЛАДРов лежат на сайте gnivc.ru 
+        </div>
+
+        <div class="reply_form_placeholder"></div>
+
+        <div class="reply">
+
+        </div>
+    </div>
+
+    <div class="reply_comments" id="reply_comments_7491943">
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+
+
+        			<p class="for_users_only_msg">Только зарегистрированные пользователи могут оставлять комментарии. <a href="https://habrahabr.ru/auth/login/">Войдите</a>, пожалуйста.</p>
+
+
+
+      
+<form action="/json/favorites/" method="post" id="edit_tags_form" class="hidden">
+  <input type="hidden" name="action" value="add" />
+  <input type="hidden" name="ti" value="0" />
+  <input type="hidden" name="tt" value="0" />
+  <label>Пометьте топик понятными вам метками, если хотите</label>
+  <input type="text" name="tags_string" class="tags_string" />
+  <div class="description">Метки лучше разделять запятой. Например: <i>общение, социальные сети, myspace.com, подростки, мердок</i></div>
+  <input type="submit" value="Сохранить" class="submit" /> или <a href="#" class="close" onclick="return close_edit_tags()">закрыть</a>
+</form>
+
+    </div>
+    <div class="sidebar_right">
+          
+
+  <div class="live-broadcast live-broadcast_habrahabr">
+    <h2 class="live-broadcast__title">Что обсуждают</h2>
+    <div class="live-broadcast__tabs tabs" id="broadcast_tabs_comments">
+      <ul class="tabs__menu tabs__menu_comments menu menu_inline">
+        <li class="menu__item"><a href="#broadcast_comments_now" class="menu__item-tab">Сейчас</a></li>
+        <li class="menu__item"><a href="#broadcast_comments_yesterday" class="menu__item-tab">Вчера</a></li>
+        <li class="menu__item"><a href="#broadcast_comments_week" class="menu__item-tab">Неделя</a></li>
+      </ul>
+
+        <div class="tabs__content" id="broadcast_comments_now">
+            <ul class="content-list content-list_comments" >
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/120194/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Наивный Байесовский классификатор в 25 строк кода</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/120194/#comments" class="content-list__item-counter icon_comments">23</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276249/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Лучшие бесплатные коллекции векторных иконок</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276249/#comments" class="content-list__item-counter icon_comments">4</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276247/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Работы с JSON в Swift</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276247/#comments" class="content-list__item-counter icon_comments">3</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275355/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Анонимный Дед Мороз 2015-2016 — Пост хвастовства новогодними подарками</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275355/#comments" class="content-list__item-counter icon_comments">66</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/273393/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Простейшие клеточные автоматы и их практическое применение</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/273393/#comments" class="content-list__item-counter icon_comments">7</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tabs__content" id="broadcast_comments_yesterday">
+            <ul class="content-list content-list_comments" >
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276211/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Исследование распространенной малвари под Android</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276211/#comments" class="content-list__item-counter icon_comments">40</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/273393/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Простейшие клеточные автоматы и их практическое применение</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/273393/#comments" class="content-list__item-counter icon_comments">7</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/reactos/blog/276229/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Передаем привет с FOSDEM 2016</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/reactos/blog/276229/#comments" class="content-list__item-counter icon_comments">6</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276223/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">UX как кунг-фу (пособие для троллинга и корректировки штатного расписания)</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276223/#comments" class="content-list__item-counter icon_comments">4</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/276249/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Лучшие бесплатные коллекции векторных иконок</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276249/#comments" class="content-list__item-counter icon_comments">4</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tabs__content" id="broadcast_comments_week">
+            <ul class="content-list content-list_comments" >
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275861/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">«Hello World!» на C массивом int main[]</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275861/#comments" class="content-list__item-counter icon_comments">143</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275993/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Откуда берутся плохие программисты и в чем их проблема</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275993/#comments" class="content-list__item-counter icon_comments">131</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275801/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Rust и парадокс Блаба</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275801/#comments" class="content-list__item-counter icon_comments">130</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275865/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Классы, множества, группы, системы</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275865/#comments" class="content-list__item-counter icon_comments">109</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/company/infopulse/blog/275951/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Несколько вещей, о которых стоит помнить программисту в возрасте</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/company/infopulse/blog/275951/#comments" class="content-list__item-counter icon_comments">99</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tabs__content" id="broadcast_comments_month">
+            <ul class="content-list content-list_comments" >
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/272937/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Почему ваш любимый мессенджер должен умереть</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/272937/#comments" class="content-list__item-counter icon_comments">339</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275409/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Как не стать программистом или… тебе здесь не место</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275409/#comments" class="content-list__item-counter icon_comments">285</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/275135/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Почему я пишу игры на C (да, на C)</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/275135/#comments" class="content-list__item-counter icon_comments">251</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/274511/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Бенчмарк 32 и 64-битных версий браузеров: быстрее, сильнее, выше?</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/274511/#comments" class="content-list__item-counter icon_comments">219</a>
+                </li>
+                <li class="content-list__item">
+                  <a href="https://habrahabr.ru/post/274523/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" class="content-list__item-link">Angular 2 против React: И будет кровь</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/274523/#comments" class="content-list__item-counter icon_comments">184</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <script>
+    window._yaparams = {'hubs':[]};
+    // hubs to GA
+      _yaparams['hubs'].push('programming (Программирование)');
+  </script>
+
+
+
+          
+  <div class="column-wrapper column-wrapper_bottom column-wrapper_bordered">
+    <div class="content_left">
+      
+
+  <div class="live-broadcast live-broadcast_feed">
+    <h2 class="live-broadcast__title live-broadcast__title_feed">Интересные публикации</h2>
+
+    <div class="dropdown dropdown_broadcast">
+      <button type="button" class="btn btn_outline_grey btn_large icon_cog dropdown-toggle" data-toggle="dropdown">
+      </button>
+      <div class="dropdown-container">
+        <ul class="n-dropdown-menu n-dropdown-menu_feed" id="filter">
+          <li class="n-dropdown-menu__item">
+            <label class="checkbox checkbox_custom">
+              <input type="checkbox" class="checkbox__input" name="habrahabr" checked/>
+              <span class="checkbox__label">Хабрахабр</span>
+            </label>
+          </li>
+          <li class="n-dropdown-menu__item">
+            <label class="checkbox checkbox_custom">
+              <input type="checkbox" class="checkbox__input" name="geektimes" checked/>
+              <span class="checkbox__label">Гиктаймс</span>
+            </label>
+          </li>
+          <li class="n-dropdown-menu__item">
+            <label class="checkbox checkbox_custom">
+              <input type="checkbox" class="checkbox__input" name="megamozg" checked/>
+              <span class="checkbox__label">Мегамозг</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="live-broadcast__content">
+      <ul class="content-list content-list_feed" id="list">
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270100/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Подкаст «Звук»: Ответы на вопросы слушателей</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270100/#comments" class="content-list__item-counter icon_comments">1</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276249/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Лучшие бесплатные коллекции векторных иконок</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276249/#comments" class="content-list__item-counter icon_comments">4</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270142/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Контроллер управления вытяжным вентилятором с WiFi</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270142/#comments" class="content-list__item-counter icon_comments">29</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/273393/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Простейшие клеточные автоматы и их практическое применение</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/273393/#comments" class="content-list__item-counter icon_comments">7</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270150/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">3D-печатные игрушки для детей (в основном)</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270150/#comments" class="content-list__item-counter icon_comments">9</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23708/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Куда пойдут деньги в 2016 году? Прогнозы для Social + Digital</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23708/#comments" class="content-list__item-counter icon_comments">0</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276229/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Передаем привет с FOSDEM 2016</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276229/#comments" class="content-list__item-counter icon_comments">6</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270148/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Полезный софт: 7 мобильных приложений для фотографов</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270148/#comments" class="content-list__item-counter icon_comments">16</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270140/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Управление освещением в ванной на основе счетчика посетителей</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270140/#comments" class="content-list__item-counter icon_comments">40</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23702/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Взрывное продвижение, целевая аудитория и позиционирование</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23702/#comments" class="content-list__item-counter icon_comments">2</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276219/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Исследователи нашли множество критических уязвимостей в платежных протоколах</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276219/#comments" class="content-list__item-counter icon_comments">1</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23700/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Кадровые перестановки в крупнейших ИТ- и медиакомпаниях России на этой неделе</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23700/#comments" class="content-list__item-counter icon_comments">0</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270136/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Генетики при помощи CRISPR убрали дефектный ген, приводящий к дегенерации сетчатки глаз</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270136/#comments" class="content-list__item-counter icon_comments">4</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276211/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Исследование распространенной малвари под Android</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276211/#comments" class="content-list__item-counter icon_comments">40</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23698/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Герман Каплун и Алексей Шахматов — о перспективах мирового венчурного рынка</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23698/#comments" class="content-list__item-counter icon_comments">1</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276195/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Алгоритмы для поиска палиндромов</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276195/#comments" class="content-list__item-counter icon_comments">13</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23694/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Ахиллесова пята: Facebook наконец признал блокировщиков рекламы серьезной угрозой для своего бизнеса</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23694/#comments" class="content-list__item-counter icon_comments">23</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23692/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Job-туризм</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23692/#comments" class="content-list__item-counter icon_comments">11</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276193/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Метод Finite Volume — реализация на примере теплопроводности</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276193/#comments" class="content-list__item-counter icon_comments">11</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276179/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Архитектура WLAN: что выбрать?</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276179/#comments" class="content-list__item-counter icon_comments">0</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276003/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Caché Class Explorer — исследуем Caché в нотации UML</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276003/#comments" class="content-list__item-counter icon_comments">2</a>
+          </li>
+          <li class="content-list__item content-list__item_habrahabr hidden" data-type="habrahabr">
+            <a href="https://habrahabr.ru/post/276187/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Реализуем аналог Apple iCloud Voicemail c использованием свободных грамматик от Яндекса</a>&nbsp;&nbsp;<a href="https://habrahabr.ru/post/276187/#comments" class="content-list__item-counter icon_comments">2</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23690/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Как отличить сайт с копипастами от сайта-интегратора?</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23690/#comments" class="content-list__item-counter icon_comments">9</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270076/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Топ 10 лучших видеороликов Apple. Зимняя ностальгия</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270076/#comments" class="content-list__item-counter icon_comments">15</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23686/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Поручения президента о легализации и поддержке самозанятых граждан включены в антикризисный план</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23686/#comments" class="content-list__item-counter icon_comments">17</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23688/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Интересные международные мероприятия февраля</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23688/#comments" class="content-list__item-counter icon_comments">4</a>
+          </li>
+          <li class="content-list__item content-list__item_megamozg hidden" data-type="megamozg">
+            <a href="https://megamozg.ru/post/23588/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Собеседование в Booking.com (часть 1, московская)</a>&nbsp;&nbsp;<a href="https://megamozg.ru/post/23588/#comments" class="content-list__item-counter icon_comments">45</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270084/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">РОЦИТ будет закрывать «мошеннические» интернет-магазины без суда</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270084/#comments" class="content-list__item-counter icon_comments">17</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270052/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">5 вещей, которые лучше взять с собой на воздушную съемку</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270052/#comments" class="content-list__item-counter icon_comments">13</a>
+          </li>
+          <li class="content-list__item content-list__item_geektimes hidden" data-type="geektimes">
+            <a href="https://geektimes.ru/post/270032/" class="content-list__item-link" onclick="if (typeof ga === 'function') { ga('send', 'event', 'tm_block', 'live_broadcast_activity', 'comment'); }" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo">Как одиночное заключение влияет на мозг</a>&nbsp;&nbsp;<a href="https://geektimes.ru/post/270032/#comments" class="content-list__item-counter icon_comments">30</a>
+          </li>
+      </ul>
+    </div>
+  </div>
+
+
+        <div class="columns-group columns-group_promo">
+            
+
+  <div class="columns-group__column promo-block promo-block_vacancies">
+  <h2 class="promo-block__title">
+    <a href="https://moikrug.ru/" target="_blank" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="icon_logo_mk"></a>
+    <a href="https://moikrug.ru/vacancies" target="_blank" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="promo-block__title-link">Вакансии</a>
+  </h2>
+
+  <div class="promo-block__content">
+    <ul class="content-list content-list_promo" >
+        <li class="content-list__item vacancy ">
+          <a href="https://moikrug.ru/vacancies/1000023040" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="content-list__item-link vacancy__title" style="background-image:none;">Full Stack Developer</a>
+          <div class="vacancy__attrs attrs">
+            <span class="attrs__item">Санкт-Петербург</span>
+            <span class="attrs__item">Полный рабочий день</span>
+            
+          </div>
+        </li>
+        <li class="content-list__item vacancy ">
+          <a href="https://moikrug.ru/vacancies/1000023038" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="content-list__item-link vacancy__title" style="background-image:none;">Senior PHP Developer</a>
+          <div class="vacancy__attrs attrs">
+            <span class="attrs__item">Санкт-Петербург</span>
+            <span class="attrs__item">Полный рабочий день</span>
+            
+          </div>
+        </li>
+        <li class="content-list__item vacancy ">
+          <a href="https://moikrug.ru/vacancies/1000021450" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="content-list__item-link vacancy__title" style="background-image:none;">PHP-разработчик</a>
+          <div class="vacancy__attrs attrs">
+            
+            <span class="attrs__item">Полный рабочий день</span>
+            
+          </div>
+        </li>
+        <li class="content-list__item vacancy ">
+          <a href="https://moikrug.ru/vacancies/1000023405" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="content-list__item-link vacancy__title" style="background-image:none;">iOS и/или Android-разработчик</a>
+          <div class="vacancy__attrs attrs">
+            <span class="attrs__item">Москва</span>
+            <span class="attrs__item">Полный рабочий день</span>
+            <strong class="attrs__item">от 100 000 руб.</strong>
+          </div>
+        </li>
+        <li class="content-list__item vacancy ">
+          <a href="https://moikrug.ru/vacancies/1000023020" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="content-list__item-link vacancy__title" style="background-image:none;">Дизайнер интерфейсов для детских обучающих программ</a>
+          <div class="vacancy__attrs attrs">
+            <span class="attrs__item">Москва</span>
+            <span class="attrs__item">Полный рабочий день</span>
+            <strong class="attrs__item">от 100 000 руб.</strong>
+          </div>
+        </li>
+    </ul>
+  </div>
+
+  <div class="promo-block__footer">
+    <a style="background-image:none;" href="https://moikrug.ru" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="promo-block__footer-link">Создать резюме</a>
+
+    <a style="background-image:none;" href="https://moikrug.ru/info/service" data-utm="?utm_source=tm_habrahabr&utm_medium=tm_block&utm_campaign=tm_promo" class="promo-block__footer-link">Разместить вакансию</a>
+  </div>
+</div>
+
+
+
+
+          
+  <div class="columns-group__column promo-block promo-block_freelansim-tasks">
+    <h2 class="promo-block__title">
+      <a href="http://freelansim.ru" target="_blank" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="icon_logo_freelansim"></a>
+      <a href="http://freelansim.ru" target="_blank" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="promo-block__title-link">Заказы</a>
+    </h2>
+
+    <div class="promo-block__content">
+      <ul class="content-list content-list_promo" >
+          <li class="content-list__item task ">
+            <a href="http://freelansim.ru/tasks/135311" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="content-list__item-link task__title">Full-stack разработчик (Django / RoR)</a>
+            <div class="task__attrs attrs">
+              <span class="attrs__item">31.01.2016</span>
+              <span class="attrs__item">0 откликов</span>
+              <strong class="attrs__item">Цена договорная</strong>
+
+            </div>
+          </li>
+          <li class="content-list__item task ">
+            <a href="http://freelansim.ru/tasks/135185" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="content-list__item-link task__title">Парсер AI файлов Adobe Illustrator на языке AS3 под платформу Air</a>
+            <div class="task__attrs attrs">
+              <span class="attrs__item">31.01.2016</span>
+              <span class="attrs__item">0 откликов</span>
+              <strong class="attrs__item">40000 руб./за проект</strong>
+
+            </div>
+          </li>
+          <li class="content-list__item task ">
+            <a href="http://freelansim.ru/tasks/135143" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="content-list__item-link task__title">Парсер PSD файлов Adobe Photoshop на языке AS3 под платформу Adobe AIR</a>
+            <div class="task__attrs attrs">
+              <span class="attrs__item">31.01.2016</span>
+              <span class="attrs__item">0 откликов</span>
+              <strong class="attrs__item">30000 руб./за проект</strong>
+
+            </div>
+          </li>
+          <li class="content-list__item task task_marked">
+            <a href="http://freelansim.ru/tasks/135309" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="content-list__item-link task__title">Расширенный медиаплеер для Samsung TV</a>
+            <div class="task__attrs attrs">
+              <span class="attrs__item">31.01.2016</span>
+              <span class="attrs__item">0 откликов</span>
+              <strong class="attrs__item">200000 руб./за проект</strong>
+
+            </div>
+          </li>
+          <li class="content-list__item task ">
+            <a href="http://freelansim.ru/tasks/135305" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="content-list__item-link task__title">Ищем Frontend Designer</a>
+            <div class="task__attrs attrs">
+              <span class="attrs__item">31.01.2016</span>
+              <span class="attrs__item">0 откликов</span>
+              <strong class="attrs__item">Цена договорная</strong>
+
+            </div>
+          </li>
+      </ul>
+    </div>
+
+    <div class="promo-block__footer">
+      <a href="http://freelansim.ru/" data-utm="?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="promo-block__footer-link">Зарегистрироваться</a>
+
+      <a href="http://freelansim.ru/?utm_source=habrahabr&utm_medium=referral&utm_campaign=mainpage&utm_content=block_freelansim" class="promo-block__footer-link">Разместить заказ</a>
+    </div>
+  </div>
+
+        </div>
+    </div>
+
+    <div class="sidebar_right">
+      <div class="float_yandex_ad">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- Banner 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4098002249090227"
+             data-ad-slot="3085458198"
+             data-ad-format="auto"></ins>
+        <a href="https://special.habrahabr.ru/advertising/" class="firskill__label">Реклама</a>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </div>
+  </div>
+
+
+
+          <div class="clear"></div>
+
+          <div class="footer_panel">
+            <div id="footer">
+  <dl>
+    <dd><a href="https://habrahabr.ru/auth/login/">Войти</a></dd>
+    <dd><a href="https://habrahabr.ru/auth/register/">Регистрация</a></dd>
+  </dl>
+  <dl>
+    <dt>Разделы</dt>
+    <dd><a href="https://habrahabr.ru/posts/top/">Публикации</a></dd>
+    <dd><a href="https://habrahabr.ru/hubs/">Хабы</a></dd>
+    <dd><a href="https://habrahabr.ru/companies/">Компании</a></dd>
+    <dd><a href="https://habrahabr.ru/users/">Пользователи</a></dd>
+    <dd><a href="https://toster.ru/?_aa=press_anykey">Q&amp;A</a></dd>
+    <dd><a href="https://habrahabr.ru/sandbox/">Песочница</a></dd>
+
+  </dl>
+  <dl>
+    <dt>Инфо</dt>
+    <dd><a href="/info/about/">О сайте</a></dd>
+    <dd><a href="/info/help/rules/">Правила</a></dd>
+    <dd><a href="/info/help/">Помощь</a></dd>
+    <dd><a href="/info/agreement/">Соглашение</a></dd>
+  </dl>
+  <dl>
+    <dt>Услуги</dt>
+    <dd><a href="https://special.habrahabr.ru/advertising/">Реклама</a></dd>
+      <dd><a href="https://special.habrahabr.ru/">Спецпроекты</a></dd>
+      <dd><a href="https://special.habrahabr.ru/corporate/">Тарифы</a></dd>
+      <dd><a href="https://special.habrahabr.ru/content/">Контент</a></dd>
+      <dd><a href="https://special.habrahabr.ru/workshops/">Вебинары</a></dd>
+  </dl>
+
+  <dl>
+    <dt>Разное</dt>
+    <dd><a href="/apps/">Приложения</a></dd>
+    <dd><a href="https://special.habrahabr.ru/microsoft/mobile/" target="_blank">Тест-драйв</a></dd>
+    <dd><a href="https://special.habrahabr.ru/hello_startup/bizspark/" target="_blank">Помощь стартапам</a></dd>
+      <dd><a href="https://special.habrahabr.ru/#hr">Работа в IT</a></dd>
+  </dl>
+  <div class="copyright">
+
+    <div class="about">
+      <a href="https://tmtm.ru/">© TM</a>
+
+      <br><br>
+      <a href="https://habrahabr.ru/feedback/">Служба поддержки</a><br><br>
+          <a href="https://m.habrahabr.ru/post/148658/?mobile=yes">Мобильная версия</a><br><br>
+
+
+      <div class="social_accounts">
+        <a href="https://twitter.com/habrahabr" class="tw"></a>
+        <a href="https://www.facebook.com/habrahabr.ru" class="fb"></a>
+        <a href="https://vk.com/habr" class="vk"></a>
+        <!-- <a href="" class="gp"></a> //-->
+      </div>
+
+    </div>
+  </div>
+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+      <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/libs/jquery.cookie.js"></script>
+      <script type="text/javascript">
+        $(document).ready( function(){
+          window.tmidLogin = function(){ return false; };
+          if( $.cookie('tmid_no_check') == undefined ) {
+            var expire = new Date();
+            expire.setMinutes(expire.getMinutes() + 10 );
+            $.cookie('tmid_no_check', 1, { expires: expire } );
+            $.getScript("https://id.tmtm.ru/checklogin/", function(){
+              if( window.tmidLogin() ) {
+
+                  var href = $('#login').attr('href');
+
+                  if( href !== undefined ) {
+                      window.location.href = href;
+                  }
+              }
+            });
+          }
+        });
+      </script>
+
+    <script type="text/javascript">
+  // global vars
+  var g_base_url = 'habrahabr.ru';
+  var g_show_xpanel = false;
+  var g_base_fullurl = 'https://habrahabr.ru/';
+  var g_is_guest = false;
+</script> 
+
+      <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/assets/shortcuts.js"></script>
+
+    <script type="text/javascript" src="//habracdn.net/habr/javascripts/1453985325/assets/global_footer_main.js"></script>
+
+    	<script type="text/javascript" src="https://habrahabr.ru/viewcount/post/148658/"></script>
+
+    
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            if (typeof (_yaparams) != 'undefined') {
+                w.yaCounter24049213 = new Ya.Metrika({id:24049213,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    params:_yaparams});
+            } else {
+                w.yaCounter24049213 = new Ya.Metrika({id:24049213,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true});
+            }
+
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/24049213" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+    
+
+    
+
+    <!-- Хабр не резиновый! -->
+  </body>
+</html>

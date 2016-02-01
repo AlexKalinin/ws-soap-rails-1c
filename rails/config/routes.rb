@@ -9,8 +9,8 @@ Rails.application.routes.draw do
 
   wash_out :ones_soap
 
-  get 'getfile' => 'application#get_file'
-  post 'sendfile' => 'application#send_file'
+  # get 'getfile' => 'application#get_file'
+  # post 'sendfile' => 'application#send_file'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
