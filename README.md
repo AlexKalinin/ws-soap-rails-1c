@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/repos/5731719ed19eee0082006e65/badges/99a91c6c2faa002224a6/gpa.svg)](https://codeclimate.com/repos/5731719ed19eee0082006e65/feed)
+
 ***
 
 ### NOTE FOR ENGLISH-SPEAKING
