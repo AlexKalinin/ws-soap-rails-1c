@@ -98,4 +98,4 @@ md5sum original.png uploaded.png downloaded.png
     * http://start1c.blogspot.com/2012/09/ws.html - WS-ссылки 1С
 * https://github.com/inossidabile/wash_out - Библиотека WashOut
 * https://github.com/AlexKalinin/v8unpack -- для распаковки 1С .cf (файла конфигурации)
-* [php-заглушка для теста веб-сервиса из 1С](http://fragster.ru/tmp/test.php?wsdl)
+* [php-заглушка для теста веб-сервиса из 1С](http://fragster.ru/wsfor1c/)
